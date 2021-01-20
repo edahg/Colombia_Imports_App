@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Fetch using MySQL and Node.js</title>
+</head>
+<body>
+    <div class="table-data">
+<h2>Display Data using Node.js & MySQL</h2>
+    <table border="1">
+        <tr>
+            <th>Index</th>
+            <th>Num Formulario</th>
+            <th>Fecha Transaccion</th>
+            <th>Proveedor_Extranjero</th>
+            <th>NIT_Importador</th>
+            <th>Importador</th>
+            <th>Subpartidas</th>
+            <th>Subpartida Arancelaria</th>
+            <th>FOB(USD)</th>
+            <th>Gastos</th>
+            <th>Arancel(%)</th>
+            <th>Factor_Importacion</th>
+        </tr>
+        
+        <%
+        if(importData.length!=0){
+        var i=1;
+        importData.forEach(function(data){
+        %>
+        <tr>
+            <td><%=i; %></td>
+            <td><%=data.Num_Formulario %></td>
+            <td><%=data.Fecha_Transaccion %></td>
+            <td><%=data.Proveedor_Extranjero %></td>
+            <td><%=data.NIT_Importador %></td>
+            <td><%=data.Importador %></td>
+            <td><%=data.Subpartidas %></td>
+            <td><%=data.Subpartida_Arancelaria %></td>
+            <td><%=data.FOB %></td>
+            <td><%=data.Gastos %></td>
+            <td><%=data.Arancel %></td>
+            <td><%=data.Factor_Importacion %></td>
+
+
+        </tr>
+        <%  i++; }) %>
+        <% } else{ %>
+            <tr>
+                <td colspan="7">No Data Found</td>
+            </tr>
+        <% } %>
+    </table>
+    </div>
+</body>
+</html>
+
+<style> 
+    table, td, th { 
+     border: 1px solid #ddd; 
+     text-align: left; 
+    } 
+    table { 
+     border-collapse: collapse; 
+     width: 50%; 
+    } 
+    .table-data{ 
+     position: relative; 
+     left:150px; 
+     top:100px; 
+    } 
+    th, td { 
+     padding: 15px; 
+    } 
+</style>

@@ -7,7 +7,6 @@
         <v-btn v-for="[link, route] in links" :key="link" :to=route text>
           {{ link }}
         </v-btn>
-
         <v-spacer></v-spacer>
       </v-container>
     </v-app-bar>

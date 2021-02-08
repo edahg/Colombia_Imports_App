@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import store from '../store/index';
+//import store from '../store/index';
 
 
 Vue.use(VueRouter)
@@ -26,7 +26,7 @@ const router = new VueRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
+/* router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.public)) {
       next();
   } else if (store.state.usuario) {
@@ -37,6 +37,6 @@ router.beforeEach((to, from, next) => {
   } else {
       next({ name: 'login' });
   }
-})
+}) */
 
 export default router

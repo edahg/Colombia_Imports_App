@@ -110,4 +110,18 @@ router.post('/signin', function(req, res, next){
     })
 });
 
+router.post('/savequeries', async(req, res) => {
+    var sql = `INSERT INTO Queries (name, user_id,
+        search_type, search_input, end_year, start_year, 
+        end_month, start_month) 
+        VALUES('${req.body.name}', '${req.body.userId}', 
+        '${req.body.searchType}', '${req.body.searchInput}',
+        ${req.body.endYear}, ${req.body.startYear},
+        ${req.body.endMonth}, ${req.body.startMonth})`
+    db.query(sql, function (err, data, fields) {
+        if (err) console.log(err);
+        res.status(200);
+    })
+});
+
 module.exports = router;

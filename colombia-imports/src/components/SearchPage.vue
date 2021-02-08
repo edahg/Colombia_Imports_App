@@ -20,7 +20,9 @@
               <v-tabs
                 fixed-tabs
                 background-color="indigo"
-                dark>
+                dark
+                v-model="searchType"
+                @change="hideTable()">
                 <v-tab v-for="searchtype in searchTypes" :key="searchtype" text>
                   {{searchtype}}
                 </v-tab>
@@ -53,19 +55,18 @@
                 <div class="text-center">
                   <v-btn rounded color="primary" dark @click.native="search()"> Buscar </v-btn>
                 </div>
-
+              <p></p>
               <div v-if="showTable">
                   <v-data-table
-                    :headers="headers"
-                    :items="desserts"
+                    :headers="this.headers"
+                    :items="this.results"
                     :items-per-page="10"
                     class="elevation-1"
-                  ></v-data-table>
-                  <pre>
-                      {{this.searchInput}}
-                      {{this.results}}
-                  </pre>
-              </div>        
+                  ></v-data-table>                  
+              </div>
+              <p v-if="showMessage">
+                  La consulta no arrojó resultados                 
+              </p>         
 
               <!--  -->
             </v-sheet>
@@ -81,7 +82,8 @@ export default {
   data(){   
     return {
       searchTypes: ["Busqueda Por Partida", "Busqueda Por Proveedor", "Busqueda Por Importador"],
-      headers: ['nit', 'importador'],
+      headers: [],
+      headers_: [],
       years: undefined,
       months: undefined,
       searchInput: "",
@@ -91,6 +93,8 @@ export default {
       endMonth: undefined,
       showTable: false,
       results: undefined,
+      searchType: undefined,
+      showMessage: false
       }     
   },
   created() {
@@ -99,6 +103,11 @@ export default {
   },
 
   methods: {
+    hideTable(){
+      this.showTable = false;
+      this.showMessage = false;
+    },
+
     getYears(){ 
       axios.get('http://localhost:3000/api/get-years/')
         .then(response => {
@@ -113,13 +122,58 @@ export default {
       }).catch(err => console.error(err));
     },
     search(){
-      this.showTable = true;
-      axios.get('http://localhost:3000/api/query-by-hscode/',
-       {params: {searchInput: this.searchInput}})
-        .then(response => {
-          this.results=response.data;
-          //console.log(response.data)
-      }).catch(err => console.error(err));
+      if(this.searchType == 0){
+        axios.get('http://localhost:3000/api/query-by-hscode/',
+        {params: {searchInput: this.searchInput, syear: this.startYear,
+                    smonth: this.startMonth, fyear: this.endYear,
+                    fmonth: this.endMonth}})
+          .then(response => {
+            this.results=response.data;
+            if (this.results.length == 0){
+              this.showMessage = true;
+            }else{
+              this.headers_ = Object.keys(this.results[0]);
+              this.headers_.forEach(elem => 
+                this.headers.push({text: elem, value: elem}));
+              this.showTable = true;
+              this.showMessage = false;
+            }
+        }).catch(err => console.error(err));
+      }else if(this.searchType == 1){
+        axios.get('http://localhost:3000/api/query-by-exporter/',
+        {params: {searchInput: this.searchInput, syear: this.startYear,
+                    smonth: this.startMonth, fyear: this.endYear,
+                    fmonth: this.endMonth}})
+          .then(response => {
+            this.results=response.data;            
+            if (this.results.length == 0){
+              this.showMessage = true;
+            }else{
+              this.headers_ = Object.keys(this.results[0]);
+              this.headers_.forEach(elem => 
+                this.headers.push({text: elem, value: elem}));
+              this.showTable = true;
+              this.showMessage = false;
+            }
+          }).catch(err => console.error(err));
+      }else if(this.searchType == 2){
+        axios.get('http://localhost:3000/api/query-by-importer/',
+        {params: {searchInput: this.searchInput, syear: this.startYear,
+                    smonth: this.startMonth, fyear: this.endYear,
+                    fmonth: this.endMonth}})
+          .then(response => {
+            this.results=response.data;
+            if (this.results.length == 0){
+              this.showMessage = true;
+            }else{
+              this.headers_ = Object.keys(this.results[0]);
+              this.headers_.forEach(elem => 
+                this.headers.push({text: elem, value: elem}));
+              this.showTable = true;
+              this.showMessage = false;
+            }
+        }).catch(err => console.error(err));
+      }
     }
   }
 };

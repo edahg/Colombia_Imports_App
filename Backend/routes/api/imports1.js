@@ -97,7 +97,6 @@ router.post('/signin', function(req, res, next){
                FROM Users 
                where username = '${req.body.username}'`
     db.query(sql, function (err, data, fields) {
-        console.log(data[0].password)
         if (err){
             return res.status(404).send("Usuario no encontrado");
         } 

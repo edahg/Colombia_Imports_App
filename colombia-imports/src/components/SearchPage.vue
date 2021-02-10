@@ -87,7 +87,11 @@
           </div>
           <p></p>
           <div v-if="showTable">
-            <results-table :headers="this.headers" :results="this.results"></results-table>
+            <results-table
+              :headers="this.headers"
+              :results="this.results"
+              :query="this.query"
+            ></results-table>
           </div>
           <p v-if="showMessage">La consulta no arrojó resultados</p>
 
@@ -100,13 +104,13 @@
 
 <script>
 import axios from "axios";
-import ResultsTable from "./ResultsTable"
+import ResultsTable from "./ResultsTable";
 export default {
   components: {
-      ResultsTable
-    },
-  data() {    
-    return {  
+    ResultsTable,
+  },
+  data() {
+    return {
       searchTypes: [
         "Busqueda Por Partida",
         "Busqueda Por Proveedor",
@@ -126,7 +130,7 @@ export default {
       searchType: undefined,
       showMessage: false,
       queryName: "",
-      query: [],      
+      query: [],
     };
   },
   created() {
@@ -145,8 +149,8 @@ export default {
         .get("http://localhost:3000/api/get-years/")
         .then((response) => {
           this.years = response.data;
-          this.startYear = this.years[0]
-          this.endYear = this.years[this.years.length-1]
+          this.startYear = this.years[0]["years"];
+          this.endYear = this.years[this.years.length - 1]["years"];
         })
         .catch((err) => console.error(err));
     },
@@ -155,20 +159,22 @@ export default {
         .get("http://localhost:3000/api/get-months/")
         .then((response) => {
           this.months = response.data;
-          this.startMonth = this.months[0]
-          this.endMonth = this.months[this.months.length-1]
+          this.startMonth = this.months[0]["months"];
+          this.endMonth = this.months[this.months.length - 1]["months"];
           //console.log(response.data)
         })
         .catch((err) => console.error(err));
     },
     search() {
       this.query = {
+        searchType: this.searchType,
         searchInput: this.searchInput,
         syear: this.startYear,
         smonth: this.startMonth,
         fyear: this.endYear,
         fmonth: this.endMonth,
       };
+      console.log(this.query)
       if (this.searchType == 0) {
         axios
           .get("http://localhost:3000/api/query-by-hscode/", {

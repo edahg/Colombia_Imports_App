@@ -51,20 +51,24 @@ import swal from "sweetalert";
 export default {
   props: {
     results : Array,
-    headers : Array
+    headers : Array,
+    query: Object,
   },
   data () {
     return {
       dialog: false,
+      queryName: "",
     };          
   },
   methods: {
     async saveQuery() {
+      console.log(this.query.smonth)
       try {
         const queryData = {name: this.queryName, userId: 1, 
-          searchType: this.searchType, searchInput: this.searchInput,
-          startYear: this.startYear, endYear: this.endYear, 
-          startMonth: this.startMonth, endMonth: this.startMonth}
+          searchType: this.query.searchType, searchInput: this.query.searchInput,
+          startYear: this.query.syear, endYear: this.query.fyear, 
+          startMonth: this.query.smonth, endMonth: this.query.fmonth}
+        console.log(queryData)
         let response = await axios.post(
           "http://localhost:3000/api/savequeries",
           queryData,
@@ -72,6 +76,7 @@ export default {
         console.log(response);
 
         if (response.status == 200) {
+          this.dialog = false;
           swal(
             "Exitoso",
             `Consulta ${this.queryName} guardada correctamente`,

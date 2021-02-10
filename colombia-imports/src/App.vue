@@ -86,7 +86,7 @@ export default {
   data: () => ({
     links: [
       ["Consultar Importaciones", "/"],
-      ["Consultas Guardadas", "/about"],
+      ["Consultas Guardadas", "/savedqueries"],
       ["Lista Proveedores", "/providers"],
     ],
     user: { 

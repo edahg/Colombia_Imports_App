@@ -24,7 +24,7 @@ router.get('/get-months', function(req, res, next) {
 });
 
 router.get('/query-by-hscode', function(req, res, next) {
-    console.log(req.query.searchInput)
+    console.log(req.query)
     var sql= `SELECT Subpartida_Arancelaria as 'Subpartida', Proveedor_Extranjero as 'Exportador', Importador,
     NIT_Importador, ROUND(SUM(FOB),2) AS 'Total FOB', ROUND(AVG(Factor_Importacion), 2) AS 'Promedio Factor de Importacion', 
     COUNT(Num_Formulario) as 'Cant. Importaciones' 
@@ -36,6 +36,7 @@ router.get('/query-by-hscode', function(req, res, next) {
     GROUP BY 1, 2, 3, 4
     ORDER BY 5 DESC;`;
     db.query(sql, function (err, data, fields) {
+        console.log(err)
     if (err) next(err);
     res.status(200).json(data)
     
@@ -121,6 +122,14 @@ router.post('/savequeries', async(req, res) => {
     db.query(sql, function (err, data, fields) {
         if (err) console.log(err);
         res.status(200);
+    })
+});
+
+router.get('/get-queries', async(req, res) => {
+    var sql = `SELECT * FROM Queries WHERE user_id = 1`
+    db.query(sql, function (err, data, fields){
+        if (err) console.log(err);
+        res.status(200).json(data)
     })
 });
 

@@ -184,6 +184,8 @@ export default {
         .get("http://localhost:3000/api/get-years/")
         .then((response) => {
           this.years = response.data;
+          this.startYear = this.years[0]['years']
+          this.endYear = this.years[this.years.length -1]['years']
         })
         .catch((err) => console.error(err));
     },
@@ -192,6 +194,8 @@ export default {
         .get("http://localhost:3000/api/get-months/")
         .then((response) => {
           this.months = response.data;
+          this.startMonth = this.months[0]['months']
+          this.endMonth = this.months[this.months.length - 1]['months']
           //console.log(response.data)
         })
         .catch((err) => console.error(err));

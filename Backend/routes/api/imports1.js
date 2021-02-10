@@ -124,4 +124,12 @@ router.post('/savequeries', async(req, res) => {
     })
 });
 
+router.get('/get-queries', async(req, res) => {
+    var sql = `SELECT * FROM Queries WHERE user_id = 1`
+    db.query(sql, function (err, data, fields){
+        if (err) console.log(err);
+        res.status(200).json(data)
+    })
+});
+
 module.exports = router;

@@ -8,7 +8,7 @@
             :items="years"
             label="Año"
             item-text="years"
-            item-value="years"
+            item-value="years[-1]"
             v-model="startYear"
             dense
             outlined
@@ -87,48 +87,7 @@
           </div>
           <p></p>
           <div v-if="showTable">
-            <v-data-table
-              :headers="this.headers"
-              :items="this.results"
-              :items-per-page="10"
-              class="elevation-1"
-            ></v-data-table>
-            <template>
-              <v-row justify="center">
-                <v-dialog v-model="dialog" persistent max-width="600px">
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn color="primary" dark v-bind="attrs" v-on="on">
-                      Guardar Consulta
-                    </v-btn>
-                  </template>
-                  <v-card>
-                    <v-card-title>
-                      <span class="headline">Guardar Consulta</span>
-                    </v-card-title>
-                    <v-card-text>
-                      <v-container>
-                        <v-row>
-                          <v-text-field
-                            v-model="queryName"
-                            label="Nombre"
-                            required
-                          ></v-text-field>
-                        </v-row>
-                      </v-container>
-                    </v-card-text>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="blue darken-1" text @click="dialog = false">
-                        Cancelar
-                      </v-btn>
-                      <v-btn color="blue darken-1" text @click="saveQuery()">
-                        Guardar
-                      </v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
-              </v-row>
-            </template>
+            <results-table :headers="this.headers" :results="this.results"></results-table>
           </div>
           <p v-if="showMessage">La consulta no arrojó resultados</p>
 
@@ -141,10 +100,13 @@
 
 <script>
 import axios from "axios";
-import swal from "sweetalert";
+import ResultsTable from "./ResultsTable"
 export default {
-  data() {
-    return {
+  components: {
+      ResultsTable
+    },
+  data() {    
+    return {  
       searchTypes: [
         "Busqueda Por Partida",
         "Busqueda Por Proveedor",
@@ -152,8 +114,8 @@ export default {
       ],
       headers: [],
       headers_: [],
-      years: undefined,
-      months: undefined,
+      years: [],
+      months: [],
       searchInput: "",
       startYear: undefined,
       startMonth: undefined,
@@ -163,9 +125,8 @@ export default {
       results: undefined,
       searchType: undefined,
       showMessage: false,
-      dialog: false,
       queryName: "",
-      query: [],
+      query: [],      
     };
   },
   created() {
@@ -184,6 +145,8 @@ export default {
         .get("http://localhost:3000/api/get-years/")
         .then((response) => {
           this.years = response.data;
+          this.startYear = this.years[0]
+          this.endYear = this.years[this.years.length-1]
         })
         .catch((err) => console.error(err));
     },
@@ -192,6 +155,8 @@ export default {
         .get("http://localhost:3000/api/get-months/")
         .then((response) => {
           this.months = response.data;
+          this.startMonth = this.months[0]
+          this.endMonth = this.months[this.months.length-1]
           //console.log(response.data)
         })
         .catch((err) => console.error(err));
@@ -261,30 +226,6 @@ export default {
             }
           })
           .catch((err) => console.error(err));
-      }
-    },
-    async saveQuery() {
-      try {
-        const queryData = {name: this.queryName, userId: 1, 
-          searchType: this.searchType, searchInput: this.searchInput,
-          startYear: this.startYear, endYear: this.endYear, 
-          startMonth: this.startMonth, endMonth: this.startMonth}
-        let response = await axios.post(
-          "http://localhost:3000/api/savequeries",
-          queryData,
-        );
-        console.log(response);
-
-        if (response.status == 200) {
-          swal(
-            "Exitoso",
-            `Consulta ${this.queryName} guardada correctamente`,
-            "success"
-          );
-        }
-      } catch (err) {
-        swal("Error", "datos incorrectos", "error");
-        console.log(err.response);
       }
     },
   },

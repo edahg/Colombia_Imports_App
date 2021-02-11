@@ -138,9 +138,8 @@ export default {
   created() {
     this.getYears();
     this.getMonths();
-    console.log(this.months)
   },
-
+  
   methods: {
     hideTable() {
       this.showTable = false;
@@ -164,7 +163,6 @@ export default {
           this.months = response.data;
           this.startMonth = this.months[0]["months"];
           this.endMonth = this.months[this.months.length - 1]["months"];
-          //console.log(response.data)
         })
         .catch((err) => console.error(err));
     },
@@ -177,7 +175,6 @@ export default {
         fyear: this.endYear,
         fmonth: this.endMonth,
       };
-      console.log(this.query)
       if (this.searchType == 0) {
         axios
           .get("http://localhost:3000/api/query-by-hscode/", {
@@ -195,7 +192,6 @@ export default {
               );
               this.showTable = true;
               this.showMessage = false;
-              console.log(this.headers)
             }
           })
           .catch((err) => console.error(err));

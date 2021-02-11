@@ -57,7 +57,7 @@ export default {
   data () {
     return {
       dialog: false,
-      queryName: "",
+      queryName: "",      
     };          
   },
   methods: {

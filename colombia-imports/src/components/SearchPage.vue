@@ -120,6 +120,8 @@ export default {
       headers_: [],
       years: [],
       months: [],
+      monthsStr: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo',
+      'Junio', 'Julio', 'Agosto', 'Septiembre'],
       searchInput: "",
       startYear: undefined,
       startMonth: undefined,
@@ -136,6 +138,8 @@ export default {
   created() {
     this.getYears();
     this.getMonths();
+    //console.log(this.monthsStr)
+    console.log(this.months)
   },
 
   methods: {

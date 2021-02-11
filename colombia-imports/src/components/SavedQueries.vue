@@ -19,7 +19,7 @@
                   v-text="item.name"
                 ></v-card-title>
 
-                <v-card-subtitle v-text="item.search_type"></v-card-subtitle>
+                <v-card-subtitle v-text="searchTypes[item.search_type]"></v-card-subtitle>
 
                 <v-card-actions>
                   <v-btn>
@@ -49,6 +49,11 @@ import axios from "axios"
 
   export default {
     data: () => ({
+      searchTypes: [
+        "Busqueda Por Partida",
+        "Busqueda Por Proveedor",
+        "Busqueda Por Importador",
+      ],
       items: [],
     }),
 

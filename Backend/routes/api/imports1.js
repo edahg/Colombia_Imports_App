@@ -25,14 +25,14 @@ router.get('/get-months', function(req, res, next) {
 
 router.get('/query-by-hscode', function(req, res, next) {
     console.log(req.query.searchInput)
-    var sql= `SELECT Subpartida_Arancelaria as 'Subpartida', Proveedor_Extranjero as 'Exportador', Importador,
-    NIT_Importador, ROUND(SUM(FOB),2) AS 'Total FOB', ROUND(AVG(Factor_Importacion), 2) AS 'Promedio Factor de Importacion', 
-    COUNT(Num_Formulario) as 'Cant. Importaciones' 
+    var sql= `SELECT Subpartida_Arancelaria as 'Subpartida', Proveedor_Extranjero as 'Exportador', 
+    Importador, NIT_Importador, ROUND(SUM(FOB),2) AS 'Total FOB', ROUND(AVG(Factor_Importacion), 2) 
+    AS 'Promedio Factor de Importacion', COUNT(Num_Formulario) as 'Cant. Importaciones' 
     FROM (SELECT * 
         FROM colombia_imports 
         WHERE YEAR(Fecha_Transaccion) BETWEEN ${req.query.syear} AND ${req.query.fyear}
         AND MONTH(Fecha_Transaccion) BETWEEN ${req.query.smonth} AND ${req.query.fmonth}
-        AND Subpartida_Arancelaria LIKE '%${req.query.searchInput}%') as imports_filtered
+        AND Subpartida_Arancelaria LIKE '${req.query.searchInput}%') as imports_filtered
     GROUP BY 1, 2, 3, 4
     ORDER BY 5 DESC;`;
     db.query(sql, function (err, data, fields) {
@@ -119,7 +119,7 @@ router.post('/savequeries', async(req, res) => {
         ${req.body.endMonth}, ${req.body.startMonth})`
     db.query(sql, function (err, data, fields) {
         if (err) console.log(err);
-        res.status(200);
+        res.status(200).send();
     })
 });
 

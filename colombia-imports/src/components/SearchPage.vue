@@ -138,7 +138,6 @@ export default {
   created() {
     this.getYears();
     this.getMonths();
-    //console.log(this.monthsStr)
     console.log(this.months)
   },
 
@@ -189,12 +188,14 @@ export default {
             if (this.results.length == 0) {
               this.showMessage = true;
             } else {
+              this.headers = []
               this.headers_ = Object.keys(this.results[0]);
               this.headers_.forEach((elem) =>
                 this.headers.push({ text: elem, value: elem })
               );
               this.showTable = true;
               this.showMessage = false;
+              console.log(this.headers)
             }
           })
           .catch((err) => console.error(err));
@@ -208,6 +209,7 @@ export default {
             if (this.results.length == 0) {
               this.showMessage = true;
             } else {
+              this.headers = []
               this.headers_ = Object.keys(this.results[0]);
               this.headers_.forEach((elem) =>
                 this.headers.push({ text: elem, value: elem })
@@ -227,6 +229,7 @@ export default {
             if (this.results.length == 0) {
               this.showMessage = true;
             } else {
+              this.headers = []
               this.headers_ = Object.keys(this.results[0]);
               this.headers_.forEach((elem) =>
                 this.headers.push({ text: elem, value: elem })

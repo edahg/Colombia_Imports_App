@@ -13,7 +13,7 @@
       </v-col>
       <v-col cols="6">
       <v-select
-            :items="groups.slice(1,4)"
+            :items="groups"
             label="Agrupar"
             item-text="groups"
             item-value="groups"
@@ -29,18 +29,17 @@
       :headers="this.headers"
       :items="this.results"
       :items-per-page="10"
-      item-key = "Importador"
+      item-key = "key"
       class="elevation-1"
       :group-by="this.groupby"
       :search="search"
-      v-model="resultsTable"
-      @click:row="showDialog"      
+      v-model="resultsTable"      
     >
-    <!-- @click:row="saveSupplier" -->
-      <template v-slot:[`item.Importador`]="props">
+    <!-- @click:row="showDialog1"  -->
+     <template v-slot:[`item.Importador`]="props">
         <v-dialog v-model="dialog1" persistent max-width="600px">
           <template v-slot:activator="{ on, attrs }">        
-            <v-btn text v-bind="attrs" v-on="on">
+            <v-btn text v-bind="attrs" v-on="on" @click="selected = props.item">
               {{props.item.Importador}}                        
             </v-btn>
           </template>
@@ -51,7 +50,7 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <h4>¿Desea guardar el proveedor {{props.item.Importador}}?</h4>
+                  <h4>¿Desea guardar el proveedor {{selected.Importador}}?</h4>
                 </v-row>
               </v-container>
             </v-card-text>
@@ -60,13 +59,22 @@
               <v-btn color="blue darken-1" text @click="dialog1 = false">
                   Cancelar
               </v-btn>
-              <v-btn color="blue darken-1" text @click="saveSupplier(props.item)">
+              <v-btn color="blue darken-1" text @click="saveSupplier(selected)">
                 Guardar
               </v-btn>
             </v-card-actions>
           </v-card>
-        </v-dialog>
+        </v-dialog>       
       </template>
+      <!-- <template v-slot:[`item.actions`]="{ item }">
+        <v-icon
+          small
+          class="mr-2"
+          @click="saveSupplier(item)"
+        >
+          mdi-pencil
+        </v-icon>
+      </template> -->
     </v-data-table>
     <p></p>
     <div>
@@ -128,44 +136,51 @@ export default {
       search: "",
       filter: [],   
       resultsTable: [],
+      selected: 0,
     };          
   },
 
   created () {
-    this.getHeaders();
+    this.getGroups();
   },
 
   methods: {
-    async getHeaders(){
+    showDialog1(item){
+      this.dialog1 = true;
+      this.selected = item
+    },
+
+    async getGroups(){
       for(let i=0; i<3; i++){ 
         this.groups.push(this.headers[i].value)
       }  
-        this.groups.unshift("Todos")
+        this.groups.unshift(" ")
         this.filter = this.groups[0]
     },
 
     async saveSupplier(item){
       //swal("Exitoso", `${row.item.Importador}`, "success")
+      this.dialog1 = false;
       try {
-        const supplierData = {Importador: item.Importador, 
-        Nit: item.Nit, userId: 1}
+        //row.selected = true;
+        const data = {importador: item.Importador, nit: item.NIT_Importador, user_id: 1}
         let response = await axios.post(
-          "http://localhost:3000/api/savesupplier",
-          supplierData,
+          "http://localhost:3000/api/save-supplier",
+          data
         );
         console.log(response);
 
         if (response.status == 200) {
-          this.dialog = false;
+          this.dialog1 = false;
           swal(
             "Exitoso",
-            `Proveedor ${item.Importador} guardada correctamente`,
+            `Proveedor ${this.item} guardado correctamente`,
             "success"
           );
         }
       } catch (err) {
         swal("Error", "datos incorrectos", "error");
-        console.log(err.response);
+        console.log(item);
       }
     },
     async saveQuery() {

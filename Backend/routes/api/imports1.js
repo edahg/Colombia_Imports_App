@@ -45,9 +45,10 @@ router.get('/query-by-hscode', function(req, res, next) {
 
 router.get('/query-by-exporter', function(req, res, next) {
     
-    var sql= `SELECT Proveedor_Extranjero as 'Exportador', Subpartida_Arancelaria as 'Subpartida', Importador,
-    NIT_Importador, ROUND(SUM(FOB),2) AS 'Total FOB', ROUND(AVG(Factor_Importacion), 2) AS 'Promedio Factor de Importacion', 
-    COUNT(Num_Formulario) as 'Cant. Importaciones' 
+    var sql= `SELECT Proveedor_Extranjero as 'Exportador', Subpartida_Arancelaria as 'Subpartida',
+     Importador, NIT_Importador, ROUND(SUM(FOB), 0) AS 'Total FOB', 
+     ROUND(AVG(Factor_Importacion), 2) AS 'Promedio Factor de Importacion', 
+     COUNT(Num_Formulario) as 'Cant. Importaciones'
     FROM (SELECT * 
         FROM colombia_imports 
         WHERE YEAR(Fecha_Transaccion) BETWEEN ${req.query.syear} AND ${req.query.fyear}
@@ -128,6 +129,17 @@ router.get('/get-queries', async(req, res) => {
     db.query(sql, function (err, data, fields){
         if (err) console.log(err);
         res.status(200).json(data)
+    })
+});
+
+router.post('/save-supplier', async(req, res) => {
+
+    var sql = `INSERT INTO Suppliers (Importador, NIT, userId) 
+        VALUES('${req.body.importador}', '${req.body.nit}', 
+        '${req.body.user_id}')`
+    db.query(sql, function (err, data, fields) {
+        if (err) console.log(err);
+        res.status(200).send();
     })
 });
 

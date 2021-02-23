@@ -143,4 +143,12 @@ router.post('/save-supplier', async(req, res) => {
     })
 });
 
+router.get('/get-suppliers', async(req, res) => {
+    var sql = `SELECT Importador, NIT FROM Suppliers WHERE userId = 1`
+    db.query(sql, function (err, data, fields){
+        if (err) console.log(err);
+        res.status(200).json(data)
+    })
+});
+
 module.exports = router;

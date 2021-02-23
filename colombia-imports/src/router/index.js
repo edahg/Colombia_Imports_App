@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Query from '../views/Queries'
+import Suppliers from '../views/Suppliers'
 //import store from '../store/index';
 
 
@@ -16,10 +17,12 @@ const routes = [
   {
     path: '/savedqueries',
     name: 'Query',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: Query
+  },
+  {
+    path: '/supplierslist',
+    name: 'suppliers',
+    component: Suppliers
   }
 ]
 

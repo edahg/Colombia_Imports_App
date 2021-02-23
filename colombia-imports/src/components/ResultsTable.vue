@@ -145,11 +145,6 @@ export default {
   },
 
   methods: {
-    showDialog1(item){
-      this.dialog1 = true;
-      this.selected = item
-    },
-
     async getGroups(){
       for(let i=0; i<3; i++){ 
         this.groups.push(this.headers[i].value)

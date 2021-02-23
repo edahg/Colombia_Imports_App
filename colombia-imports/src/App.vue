@@ -87,7 +87,7 @@ export default {
     links: [
       ["Consultar Importaciones", "/"],
       ["Consultas Guardadas", "/savedqueries"],
-      ["Lista Proveedores", "/providers"],
+      ["Lista Proveedores", "/supplierslist"],
     ],
     user: { 
                 username: "",
